@@ -43,12 +43,13 @@
 
 #define LCD_FREQ 10 // Hz 10hz = 400ms period
 
+void Init_I2C(I2C_HandleTypeDef* hal_i2c);
 void lcd_init();
 void lcd_send_string(char *str);
 void lcd_clear(void);
 void lcd_set_cursor(uint8_t row, uint8_t col);
 void lcd_backlight_on();
 void lcd_display_number(int16_t num);
-void lcd_display_mode(MODE mode, uint8_t * data);
+void lcd_display_mode();
 
 #endif /* INC_I2C_LCD_H_ */

@@ -55,6 +55,9 @@ MPU_Assignment.list \
 OBJCOPY_HEX += \
 MPU_Assignment.hex \
 
+OBJCOPY_BIN += \
+MPU_Assignment.bin \
+
 
 # All Target
 all: main-build
@@ -63,8 +66,8 @@ all: main-build
 main-build: MPU_Assignment.elf secondary-outputs
 
 # Tool invocations
-MPU_Assignment.elf MPU_Assignment.map: $(OBJS) $(USER_OBJS) D:\.git\ repo\MPU_Assignment\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "MPU_Assignment.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\.git repo\MPU_Assignment\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MPU_Assignment.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+MPU_Assignment.elf MPU_Assignment.map: $(OBJS) $(USER_OBJS) D:\git_workspace\MPU_Assignment\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "MPU_Assignment.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\git_workspace\MPU_Assignment\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MPU_Assignment.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -83,12 +86,17 @@ MPU_Assignment.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+MPU_Assignment.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "MPU_Assignment.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) MPU_Assignment.elf MPU_Assignment.hex MPU_Assignment.list MPU_Assignment.map default.size.stdout
+	-$(RM) MPU_Assignment.bin MPU_Assignment.elf MPU_Assignment.hex MPU_Assignment.list MPU_Assignment.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'

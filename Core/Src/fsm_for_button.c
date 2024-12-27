@@ -7,7 +7,7 @@
 
 #include "fsm_for_button.h"
 
-enum ButtonState button_state[NO_OF_BUTTONS];
+enum ButtonState button_state[NO_OF_BUTTONS] = { 1, 1, 1 };
 
 void fsm_for_button(void) {
 	////////////////// BUTTON 1 ////////////////////////////
@@ -25,6 +25,7 @@ void fsm_for_button(void) {
 				mode = MODIFY;
 				buffer = red_light;
 				line_1 = RED;
+				line_2 = RED;
 				break;
 			case MODIFY:
 				mode = INIT;
@@ -53,64 +54,93 @@ void fsm_for_button(void) {
 	}
 	////////////////// BUTTON 2 ////////////////////////////
 
-	switch (button_state[INCREASE_BUTTON]) {
+	switch (button_state[STATE_BUTTON]) {
 	case BUTTON_RELEASED:
-		if (is_button_pressed(INCREASE_BUTTON)) {
-			buffer = (buffer + 1) % 100;
-			button_state[INCREASE_BUTTON] = BUTTON_PRESSED;
+		if (is_button_pressed(STATE_BUTTON)) {
+			button_state[STATE_BUTTON] = BUTTON_PRESSED;
 		}
 		break;
 	case BUTTON_PRESSED:
-		if (!is_button_pressed(INCREASE_BUTTON)) {
-			button_state[INCREASE_BUTTON] = BUTTON_RELEASED;
-		} else {
-			if (is_button_pressed_1s(INCREASE_BUTTON)) {
-				button_state[INCREASE_BUTTON] =
-						BUTTON_PRESSED_MORE_THAN_1_SECOND;
-			}
-		}
-		break;
-	case BUTTON_PRESSED_MORE_THAN_1_SECOND:
-		if (!is_button_pressed(INCREASE_BUTTON)) {
-			button_state[INCREASE_BUTTON] = BUTTON_RELEASED;
-		}
-		//		if (is_avail(HOLD) == 1) {
-		//			buffer = (buffer + 1) % 100;
-		//			setTimer(HOLD, HALF_SEC);
-		//		}
-		break;
-	}
-	switch (button_state[SET_BUTTON]) {
-	case BUTTON_RELEASED:
-		if (is_button_pressed(SET_BUTTON)) {
+		if (!is_button_pressed(STATE_BUTTON)) {
 			switch (mode) {
-			case MODIFY_RED:
-				red_light = buffer;
+			case MANUAL:
+				line_1 = (line_1 + 1) % NO_OF_STATE;
+				line_2 = (line_2 + 1) % NO_OF_STATE;
 				break;
-			case MODIFY_AMBER:
-				amber_light = buffer;
-				break;
-			case MODIFY_GREEN:
-				green_light = buffer;
+			case MODIFY:
+				line_1 = (line_1 + 1) % NO_OF_STATE;
+				switch (line_1) {
+				case RED:
+					buffer = red_light;
+					break;
+				case AMBER:
+					buffer = amber_light;
+					break;
+				case GREEN:
+					buffer = green_light;
+					break;
+				default:
+					break;
+				}
 				break;
 			default:
+				break;
 			}
-			button_state[SET_BUTTON] = BUTTON_PRESSED;
-		}
-		break;
-	case BUTTON_PRESSED:
-		if (!is_button_pressed(SET_BUTTON)) {
-			button_state[SET_BUTTON] = BUTTON_RELEASED;
+			button_state[STATE_BUTTON] = BUTTON_PRESSED;
 		} else {
-			if (is_button_pressed_1s(SET_BUTTON)) {
-				button_state[SET_BUTTON] = BUTTON_PRESSED_MORE_THAN_1_SECOND;
+			if (is_button_pressed_1s(STATE_BUTTON)) {
+				if (mode == MODIFY) {
+					switch (line_1) {
+					case RED:
+						red_light = buffer;
+						break;
+					case AMBER:
+						amber_light = buffer;
+						break;
+					case GREEN:
+						green_light = buffer;
+						break;
+					default:
+						break;
+					}
+				}
+				button_state[STATE_BUTTON] = BUTTON_PRESSED_MORE_THAN_1_SECOND;
 			}
 		}
 		break;
 	case BUTTON_PRESSED_MORE_THAN_1_SECOND:
-		if (!is_button_pressed(SET_BUTTON)) {
-			button_state[SET_BUTTON] = BUTTON_RELEASED;
+		if (!is_button_pressed(STATE_BUTTON)) {
+			button_state[STATE_BUTTON] = BUTTON_RELEASED;
 		}
 		break;
+	}
+
+	////////////////// BUTTON 3 ////////////////////////////
+	switch (button_state[INC_BUTTON]) {
+	case BUTTON_RELEASED:
+		if (is_button_pressed(INC_BUTTON)) {
+			break;
+			case BUTTON_PRESSED:
+			if (!is_button_pressed(INC_BUTTON)) {
+				if (mode == MODIFY) {
+					if (line_1 == GREEN && buffer >= red_light)
+						buffer = 0;
+					buffer++;
+
+				}
+				button_state[INC_BUTTON] = BUTTON_RELEASED;
+			} else {
+				if (is_button_pressed_1s(INC_BUTTON)) {
+					button_state[INC_BUTTON] =
+							BUTTON_PRESSED_MORE_THAN_1_SECOND;
+				}
+			}
+			break;
+			case BUTTON_PRESSED_MORE_THAN_1_SECOND:
+			if (!is_button_pressed(INC_BUTTON)) {
+				button_state[INC_BUTTON] = BUTTON_RELEASED;
+			}
+			break;
+		}
 	}
 }

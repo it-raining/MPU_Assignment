@@ -34,6 +34,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "scheduler.h"
 #include "global.h"
 #include "input_reading.h"
@@ -73,6 +74,8 @@ void Error_Handler(void);
 #define SEG_2_GPIO_Port GPIOC
 #define SEG_3_Pin GPIO_PIN_3
 #define SEG_3_GPIO_Port GPIOC
+#define RED_LED_Pin GPIO_PIN_1
+#define RED_LED_GPIO_Port GPIOA
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3

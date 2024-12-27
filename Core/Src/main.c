@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "fsm_traffic_light.h"
 #include "fsm_for_button.h"
+#include "i2c-lcd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -63,7 +64,14 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim->Instance == TIM2) {
+		Scheduler_Update();
+	}
+}
+void BlinkyLED(void) {
+	HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin);
+}
 /* USER CODE END 0 */
 
 /**
@@ -100,15 +108,20 @@ int main(void) {
 	/* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start_IT(&htim2);
 	Scheduler_Init();
+	lcd_init();
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	Scheduler_Add_Task(scanning_led, 1000, 1000 * SCANNING_FREQ / NO_OF_7SEG);
-	Scheduler_Add_Task(fsm_for_button, 10, 10);
+	Scheduler_Add_Task(fsm_for_button, 30, 10);
 	Scheduler_Add_Task(fsm_for_traffic_light, 120, 1000 / 2);
+	Scheduler_Add_Task(lcd_display_mode, 30, 50);
+	Scheduler_Add_Task(BlinkyLED, 20, 500);
 	while (1) {
 		Scheduler_Dispatch_Tasks();
+//		BlinkyLED();
+//		HAL_Delay(500);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -280,6 +293,9 @@ static void MX_GPIO_Init(void) {
 					| LED_GREEN_2_Pin, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, GPIO_PIN_RESET);
+
+	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB, EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin,
 			GPIO_PIN_RESET);
 
@@ -301,6 +317,13 @@ static void MX_GPIO_Init(void) {
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	/*Configure GPIO pin : RED_LED_Pin */
+	GPIO_InitStruct.Pin = RED_LED_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(RED_LED_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : BTN1_Pin BTN2_Pin BTN3_Pin */
 	GPIO_InitStruct.Pin = BTN1_Pin | BTN2_Pin | BTN3_Pin;

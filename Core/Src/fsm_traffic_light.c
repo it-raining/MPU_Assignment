@@ -7,7 +7,6 @@
 
 #include <fsm_traffic_light.h>
 uint8_t led_buffer[NO_OF_7SEG] = { 0 };
-uint8_t count_1, count_2;
 static uint8_t scanning_idx = 0;
 uint16_t EN_Pin[NO_OF_7SEG] = { EN0_Pin, EN1_Pin, EN2_Pin, EN3_Pin };
 
