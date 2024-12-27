@@ -5,4 +5,4 @@
 ../Core/Src/fsm_traffic_light.c:117:6:fsm_for_auto	3
 ../Core/Src/fsm_traffic_light.c:125:6:fsm_for_manual	1
 ../Core/Src/fsm_traffic_light.c:131:6:fsm_for_modify	5
-../Core/Src/fsm_traffic_light.c:151:6:fsm_for_traffic_light	7
+../Core/Src/fsm_traffic_light.c:153:6:fsm_for_traffic_light	7

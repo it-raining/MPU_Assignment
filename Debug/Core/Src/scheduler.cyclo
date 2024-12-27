@@ -1,7 +1,7 @@
 ../Core/Src/scheduler.c:10:5:is_avail	2
 ../Core/Src/scheduler.c:17:6:Scheduler_Init	3
-../Core/Src/scheduler.c:31:10:Scheduler_Add_Task_ID	11
-../Core/Src/scheduler.c:78:10:Scheduler_Add_Task	1
-../Core/Src/scheduler.c:83:6:Scheduler_Update	3
-../Core/Src/scheduler.c:92:6:Scheduler_Dispatch_Tasks	5
-../Core/Src/scheduler.c:104:9:Scheduler_Remove_Task	5
+../Core/Src/scheduler.c:32:6:Scheduler_Update	3
+../Core/Src/scheduler.c:41:10:Scheduler_Add_Task_ID	11
+../Core/Src/scheduler.c:88:10:Scheduler_Add_Task	1
+../Core/Src/scheduler.c:93:6:Scheduler_Dispatch_Tasks	5
+../Core/Src/scheduler.c:105:9:Scheduler_Remove_Task	5

@@ -7,6 +7,12 @@
 #include "i2c-lcd.h"
 I2C_HandleTypeDef *hi2c;
 
+
+void lcd_backlight_on() {
+	uint8_t data[1] = { LCD_BACKLIGHT_ON };
+	HAL_I2C_Master_Transmit(hi2c, LCD_ADDR, (uint8_t*) data, 1, HAL_MAX_DELAY);
+	HAL_I2C_Master_Transmit(hi2c, LCD_ADDR, (uint8_t*) data, 1, HAL_MAX_DELAY);
+}
 void Init_I2C(I2C_HandleTypeDef *hal_i2c) {
 	hi2c = hal_i2c;
 	lcd_init();
@@ -31,24 +37,25 @@ static uint8_t lcd_send_data(uint8_t data) {
 	return 1;
 }
 
-void lcd_backlight_on() {
-	uint8_t data[1] = { LCD_BACKLIGHT_ON };
-	HAL_I2C_Master_Transmit(hi2c, LCD_ADDR, (uint8_t*) data, 1, HAL_MAX_DELAY);
-	HAL_I2C_Master_Transmit(hi2c, LCD_ADDR, (uint8_t*) data, 1, HAL_MAX_DELAY);
-}
 
+static void generate_str_from_mode(uint8_t status, char *str) {
+	switch (status) {
+	case RED:
+		strcpy(str, "R");
+		break;
+	case GREEN:
+		strcpy(str, "G");
+		break;
+	case AMBER:
+		strcpy(str, "A");
+		break;
+	default:
+		strcpy(str, "UNKNOWN");
+		break;
+	}
+}
 void lcd_init() {
 	// Init LCD
-
-//    while (!lcd_send_cmd(0x33));
-//    while (!lcd_send_cmd(0x32));
-
-//    while (!lcd_send_cmd(LCD_4BIT_MODE));
-//    while (!lcd_send_cmd(LCD_DISPLAY_AND_DISABLE_CURSOR));
-//    while (!lcd_send_cmd(LCD_CURSOR_INCREMENT));
-//    while (!lcd_send_cmd(LCD_CLEAR_DISPLAY));
-
-//    HAL_Delay(2);
 	// 4 bit initialisation
 	HAL_Delay(50);  // wait for >40ms
 	lcd_send_cmd(0x30);
@@ -101,23 +108,6 @@ void lcd_display_number(int16_t num) {
 	char buffer[16];
 	sprintf(buffer, "%d", num);
 	lcd_send_string(buffer);
-}
-
-static void generate_str_from_mode(uint8_t mode, char *str) {
-	switch (mode) {
-	case RED:
-		strcpy(str, "R");
-		break;
-	case GREEN:
-		strcpy(str, "G");
-		break;
-	case AMBER:
-		strcpy(str, "A");
-		break;
-	default:
-		strcpy(str, "UNKNOWN");
-		break;
-	}
 }
 
 void lcd_display_mode(void) {

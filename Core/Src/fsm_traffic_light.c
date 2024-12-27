@@ -145,6 +145,8 @@ void fsm_for_modify() {
 		HAL_GPIO_TogglePin(LED_GREEN_1_GPIO_Port, LED_GREEN_1_Pin);
 		HAL_GPIO_TogglePin(LED_GREEN_2_GPIO_Port, LED_GREEN_2_Pin);
 		break;
+	default:
+		break;
 	}
 }
 

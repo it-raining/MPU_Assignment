@@ -28,6 +28,16 @@ void Scheduler_Init(void) {
 		tasks.head = NULL;
 	}
 }
+
+void Scheduler_Update(void) {
+	if (!tasks.head)
+		return;
+	if (tasks.head->delay <= 0) {
+		tasks.head->runMe = 1;
+	} else
+		tasks.head->delay--;
+}
+
 uint32_t Scheduler_Add_Task_ID(void (*pF)(void), uint32_t taskID,
 		uint32_t DELAY, uint32_t PERIOD) {
 	TaskNode *newTask = (TaskNode*) malloc(sizeof(TaskNode));
@@ -78,15 +88,6 @@ uint32_t Scheduler_Add_Task_ID(void (*pF)(void), uint32_t taskID,
 uint32_t Scheduler_Add_Task(void (*pF)(void), uint32_t DELAY, uint32_t PERIOD) {
 	return Scheduler_Add_Task_ID(pF, tasks.nTasks, DELAY / TICK,
 			PERIOD / TICK);
-}
-
-void Scheduler_Update(void) {
-	if (!tasks.head)
-		return;
-	if (tasks.head->delay <= 0) {
-		tasks.head->runMe = 1;
-	} else
-		tasks.head->delay--;
 }
 
 void Scheduler_Dispatch_Tasks(void) {
