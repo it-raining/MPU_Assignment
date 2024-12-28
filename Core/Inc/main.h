@@ -34,7 +34,6 @@ extern "C" {
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include "scheduler.h"
 #include "global.h"
 #include "input_reading.h"

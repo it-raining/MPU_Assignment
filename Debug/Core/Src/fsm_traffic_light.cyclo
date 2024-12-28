@@ -1,8 +1,8 @@
 ../Core/Src/fsm_traffic_light.c:13:6:display7SEG	11
 ../Core/Src/fsm_traffic_light.c:53:6:update_buffer	1
-../Core/Src/fsm_traffic_light.c:59:6:scanning_led	1
-../Core/Src/fsm_traffic_light.c:65:6:update_led_traffic	15
-../Core/Src/fsm_traffic_light.c:122:6:fsm_for_auto	3
-../Core/Src/fsm_traffic_light.c:130:6:fsm_for_manual	1
-../Core/Src/fsm_traffic_light.c:136:6:fsm_for_modify	5
-../Core/Src/fsm_traffic_light.c:164:6:fsm_for_traffic_light	6
+../Core/Src/fsm_traffic_light.c:79:6:scanning_led	1
+../Core/Src/fsm_traffic_light.c:85:6:update_led_traffic	15
+../Core/Src/fsm_traffic_light.c:142:6:fsm_for_auto	3
+../Core/Src/fsm_traffic_light.c:151:6:fsm_for_manual	1
+../Core/Src/fsm_traffic_light.c:157:6:fsm_for_modify	5
+../Core/Src/fsm_traffic_light.c:185:6:fsm_for_traffic_light	6

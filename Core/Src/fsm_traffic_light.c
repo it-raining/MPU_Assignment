@@ -51,10 +51,30 @@ void display7SEG(int num) {
 // SCANNING 4 7SEG-LED TO DISPLAY NUMBER //
 
 void update_buffer(uint8_t num_1, uint8_t num_2) {
+	char temp[16];
 	led_buffer[0] = num_1 / 10;
 	led_buffer[1] = num_1 % 10;
 	led_buffer[2] = num_2 / 10;
 	led_buffer[3] = num_2 % 10;
+	lcd_clear_display();
+	lcd_goto_XY(0, 0);
+//	switch (mode) {
+//	case AUTO:
+		lcd_send_string("MODE : AUTO");
+
+		lcd_goto_XY(1, 0);
+		sprintf(temp, "1: %d", num_1);
+		lcd_send_string(temp);
+
+		lcd_goto_XY(1, 8);
+		strcpy(temp, "");
+		sprintf(temp, "2: %d", num_2);
+		lcd_send_string(temp);
+//		break;
+//	default:
+//		break;
+//	}
+
 }
 void scanning_led(void) {
 	EN0_GPIO_Port->ODR |= (EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin);
@@ -121,6 +141,7 @@ void update_led_traffic() {
 // AUTOMATIC RUN DEFINE //
 void fsm_for_auto(void) {
 	update_buffer(count_1, count_2);
+
 	update_led_traffic();
 	if (count_1 > 0)
 		count_1 = count_1 - 1;

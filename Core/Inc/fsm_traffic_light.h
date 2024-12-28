@@ -9,6 +9,7 @@
 #define INC_LED_PROCESSING_H_
 #include "main.h"
 #include "fsm_for_button.h"
+#include "i2c-lcd.h"
 
 #define NO_OF_7SEG 4 	//fixed
 #define SCANNING_FREQ 	1 //Hz
