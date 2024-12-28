@@ -7,80 +7,97 @@
 
 #include <fsm_traffic_light.h>
 uint8_t led_buffer[NO_OF_7SEG] = { 0 };
-static uint8_t scanning_idx = 0;
-uint16_t EN_Pin[NO_OF_7SEG] = { EN0_Pin, EN1_Pin, EN2_Pin, EN3_Pin };
-
-void display7SEG(int num) {
-	SEG_0_GPIO_Port->ODR &= ~ALL_SEG;
-	switch (num) {
-	case 0:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_0); // 0
-		break;
-	case 1:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_1); // 1
-		break;
-	case 2:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_2); // 2
-		break;
-	case 3:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_3); // 3
-		break;
-	case 4:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_4); // 4
-		break;
-	case 5:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_5); // 5
-		break;
-	case 6:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_6); // 6
-		break;
-	case 7:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_7); // 7
-		break;
-	case 8:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_8); // 8
-		break;
-	case 9:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG & ~NUM_9); // 9
-		break;
-	default:
-		SEG_0_GPIO_Port->ODR |= (ALL_SEG); // Turn off all segments
-	}
-}
 
 // SCANNING 4 7SEG-LED TO DISPLAY NUMBER //
 
 void update_buffer(uint8_t num_1, uint8_t num_2) {
 	char temp[16];
-	led_buffer[0] = num_1 / 10;
-	led_buffer[1] = num_1 % 10;
-	led_buffer[2] = num_2 / 10;
-	led_buffer[3] = num_2 % 10;
+	int state = line_1;
 	lcd_clear_display();
-	lcd_goto_XY(0, 0);
-//	switch (mode) {
-//	case AUTO:
-		lcd_send_string("MODE : AUTO");
+	lcd_goto_XY(1, 0);
+	switch (mode) {
+	case AUTO:
+		lcd_send_string(" MODE : AUTO");
 
-		lcd_goto_XY(1, 0);
+		lcd_goto_XY(2, 0);
 		sprintf(temp, "1: %d", num_1);
 		lcd_send_string(temp);
 
-		lcd_goto_XY(1, 8);
+		lcd_goto_XY(2, 8);
 		strcpy(temp, "");
 		sprintf(temp, "2: %d", num_2);
 		lcd_send_string(temp);
-//		break;
-//	default:
-//		break;
-//	}
+		break;
+	case MANUAL:
+		lcd_send_string(" MODE : MANUAL");
 
-}
-void scanning_led(void) {
-	EN0_GPIO_Port->ODR |= (EN0_Pin | EN1_Pin | EN2_Pin | EN3_Pin);
-	display7SEG(led_buffer[scanning_idx]);
-	EN0_GPIO_Port->ODR &= ~(EN_Pin[scanning_idx]);
-	scanning_idx = (scanning_idx + 1) % NO_OF_7SEG;
+		// Line 1 state
+		state = line_1;
+		lcd_goto_XY(2, 0);
+		switch (state) {
+		case RED:
+			sprintf(temp, "st:RED");
+			break;
+		case AMBER:
+			sprintf(temp, "st:AMBER");
+			break;
+		case GREEN:
+			sprintf(temp, "st:GREEN");
+			break;
+		default:
+			sprintf(temp, "st:----");
+			break;
+		}
+		lcd_send_string(temp);
+
+		// Line 2 state
+		state = line_2;
+		lcd_goto_XY(2, 8);
+		switch (state) {
+		case RED:
+			sprintf(temp, "st:RED");
+			break;
+		case AMBER:
+			sprintf(temp, "st:AMBER");
+			break;
+		case GREEN:
+			sprintf(temp, "st:GREEN");
+			break;
+		default:
+			sprintf(temp, "st:----");
+			break;
+		}
+		lcd_send_string(temp);
+		break;
+	case MODIFY:
+		lcd_send_string(" MODE : MODIFY");
+		// Line 1 state
+		state = line_1;
+		lcd_goto_XY(2, 0);
+		switch (state) {
+		case RED:
+			sprintf(temp, "st:RED");
+			break;
+		case AMBER:
+			sprintf(temp, "st:AMBER");
+			break;
+		case GREEN:
+			sprintf(temp, "st:GREEN");
+			break;
+		default:
+			sprintf(temp, "st:----");
+			break;
+		}
+		lcd_send_string(temp);
+
+		lcd_goto_XY(2, 8);
+		sprintf(temp, "val: %d", buffer);
+		lcd_send_string(temp);
+		break;
+	default:
+		break;
+	}
+
 }
 void update_led_traffic() {
 	switch (line_1) {
@@ -141,7 +158,6 @@ void update_led_traffic() {
 // AUTOMATIC RUN DEFINE //
 void fsm_for_auto(void) {
 	update_buffer(count_1, count_2);
-
 	update_led_traffic();
 	if (count_1 > 0)
 		count_1 = count_1 - 1;
@@ -151,10 +167,12 @@ void fsm_for_auto(void) {
 void fsm_for_manual(void) {
 	count_1 = 1;
 	count_2 = 1;
+	update_buffer(0, 0);
 	update_led_traffic();
 }
 
 void fsm_for_modify() {
+	update_buffer(0, 0);
 	switch (line_1) {
 	case RED:
 		update_buffer(01, buffer);

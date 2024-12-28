@@ -24,7 +24,6 @@
 #include "fsm_traffic_light.h"
 #include "fsm_for_button.h"
 #include "i2c-lcd.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +42,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
+//I2C_HandleTypeDef hi2c1;
 
 TIM_HandleTypeDef htim2;
 
@@ -65,14 +64,8 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim->Instance == TIM2) {
-		Scheduler_Update();
-		button_reading();
-	}
-}
 void BlinkyLED(void) {
-	HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin);
+	HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 }
 /* USER CODE END 0 */
 
@@ -109,36 +102,33 @@ int main(void)
   MX_TIM2_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-	HAL_TIM_Base_Start_IT(&htim2);
-	Scheduler_Init();
-	lcd_init();
-	char str[16];
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-//	Scheduler_Add_Task(scanning_led, 1000, 1000 * SCANNING_FREQ / NO_OF_7SEG);
-//	Scheduler_Add_Task(fsm_for_button, 50, 50);
-//	Scheduler_Add_Task(fsm_for_traffic_light, 500, 1000 / 2);
-//	lcd_clear_display();
+	char str[16];
+//	int count = 0;
+	HAL_TIM_Base_Start_IT(&htim2);
+	Scheduler_Init();
+
+	HAL_Delay(1000);
+	lcd_init();
+	lcd_goto_XY(1, 0);
+	strcpy(str, "MODE: TEST");
+	lcd_send_string(str);
+	lcd_goto_XY(2, 0);
+	lcd_send_string("xin chao mn nho");
+	Scheduler_Add_Task(fsm_for_button, 50, 50);
+	Scheduler_Add_Task(fsm_for_traffic_light, 500, 1000 / 2);
+	Scheduler_Add_Task(BlinkyLED, 200, 500);
 	while (1) {
-//		lcd_goto_XY(0, 0);
-//		*str= "MODE: TEST";
-//		lcd_send_string(str);
-		lcd_send_data('a');
-		HAL_Delay(1000);
-
-//		if (is_button_pressed(0))
-//			HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, 1);
-//		else
-//			HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, 0);
-//		if (is_button_pressed(1))
-//			HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, 1);
-//		else
-//			HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, 0);
-//
-//		Scheduler_Dispatch_Tasks();
-
+		Scheduler_Dispatch_Tasks();
+//		lcd_goto_XY(2, 15);
+//		lcd_send_data(count++ + '0');
+//		if (count > 10)
+//			count = 0;
+//		HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -237,9 +227,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 7999;
+  htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9;
+  htim2.Init.Period = 65535;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -314,15 +304,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, SEG_0_Pin|SEG_1_Pin|SEG_2_Pin|SEG_3_Pin
-                          |SEG_4_Pin|SEG_5_Pin|SEG_6_Pin|LED_BLUE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LED_A_2_Pin|LED_B_1_Pin|LED_B_2_Pin|LED_A_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LED_A_2_Pin|EN0_Pin|EN1_Pin|EN2_Pin
-                          |EN3_Pin|LED_B_1_Pin|LED_B_2_Pin|LED_A_1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -330,26 +318,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SEG_0_Pin SEG_1_Pin SEG_2_Pin SEG_3_Pin
-                           SEG_4_Pin SEG_5_Pin SEG_6_Pin LED_BLUE_Pin */
-  GPIO_InitStruct.Pin = SEG_0_Pin|SEG_1_Pin|SEG_2_Pin|SEG_3_Pin
-                          |SEG_4_Pin|SEG_5_Pin|SEG_6_Pin|LED_BLUE_Pin;
+  /*Configure GPIO pin : LD2_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : RED_LED_Pin */
-  GPIO_InitStruct.Pin = RED_LED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(RED_LED_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : LED_A_2_Pin EN0_Pin EN1_Pin EN2_Pin
-                           EN3_Pin LED_B_1_Pin LED_B_2_Pin LED_A_1_Pin */
-  GPIO_InitStruct.Pin = LED_A_2_Pin|EN0_Pin|EN1_Pin|EN2_Pin
-                          |EN3_Pin|LED_B_1_Pin|LED_B_2_Pin|LED_A_1_Pin;
+  /*Configure GPIO pins : LED_A_2_Pin LED_B_1_Pin LED_B_2_Pin LED_A_1_Pin */
+  GPIO_InitStruct.Pin = LED_A_2_Pin|LED_B_1_Pin|LED_B_2_Pin|LED_A_1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -360,6 +337,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(BTN1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LED_RED_Pin */
+  GPIO_InitStruct.Pin = LED_RED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_RED_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BTN3_Pin */
   GPIO_InitStruct.Pin = BTN3_Pin;
@@ -382,7 +366,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim->Instance == TIM2) {
+		Scheduler_Update();
+		button_reading();
+	}
+}
 /* USER CODE END 4 */
 
 /**

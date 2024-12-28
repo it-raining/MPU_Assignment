@@ -3,7 +3,9 @@ Edit by modify: Ngoc Hang
 **/
 
 #include "stm32f1xx_hal.h"
-
+#include <stdio.h>
+#include <string.h>
+extern I2C_HandleTypeDef hi2c1;
 void lcd_init (void);   // initialize lcd
 
 void lcd_send_cmd (char cmd);  // send command to the lcd

@@ -8,6 +8,7 @@
 #ifndef INC_FSM_FOR_BUTTON_H_
 #define INC_FSM_FOR_BUTTON_H_
 #include "main.h"
+#include "global.h"
 #include "input_reading.h"
 enum ButtonState {
 	BUTTON_RELEASED, BUTTON_PRESSED, BUTTON_PRESSED_MORE_THAN_1_SECOND
