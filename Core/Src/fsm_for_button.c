@@ -86,7 +86,7 @@ void fsm_for_button(void) {
 			default:
 				break;
 			}
-			button_state[STATE_BUTTON] = BUTTON_PRESSED;
+			button_state[STATE_BUTTON] = BUTTON_RELEASED;
 		} else {
 			if (is_button_pressed_1s(STATE_BUTTON)) {
 				if (mode == MODIFY) {
@@ -119,28 +119,29 @@ void fsm_for_button(void) {
 	switch (button_state[INC_BUTTON]) {
 	case BUTTON_RELEASED:
 		if (is_button_pressed(INC_BUTTON)) {
-			break;
-			case BUTTON_PRESSED:
-			if (!is_button_pressed(INC_BUTTON)) {
-				if (mode == MODIFY) {
-					if (line_1 == GREEN && buffer >= red_light)
-						buffer = 0;
-					buffer++;
-
-				}
-				button_state[INC_BUTTON] = BUTTON_RELEASED;
-			} else {
-				if (is_button_pressed_1s(INC_BUTTON)) {
-					button_state[INC_BUTTON] =
-							BUTTON_PRESSED_MORE_THAN_1_SECOND;
-				}
-			}
-			break;
-			case BUTTON_PRESSED_MORE_THAN_1_SECOND:
-			if (!is_button_pressed(INC_BUTTON)) {
-				button_state[INC_BUTTON] = BUTTON_RELEASED;
-			}
-			break;
+			button_state[INC_BUTTON] = BUTTON_PRESSED;
 		}
+		break;
+	case BUTTON_PRESSED:
+		if (!is_button_pressed(INC_BUTTON)) {
+			if (mode == MODIFY) {
+				if (line_1 == GREEN && buffer >= red_light)
+					buffer = 0;
+				buffer++;
+
+			}
+			button_state[INC_BUTTON] = BUTTON_RELEASED;
+		} else {
+			if (is_button_pressed_1s(INC_BUTTON)) {
+				button_state[INC_BUTTON] = BUTTON_PRESSED_MORE_THAN_1_SECOND;
+			}
+		}
+		break;
+	case BUTTON_PRESSED_MORE_THAN_1_SECOND:
+		if (!is_button_pressed(INC_BUTTON)) {
+			button_state[INC_BUTTON] = BUTTON_RELEASED;
+		}
+		break;
 	}
 }
+

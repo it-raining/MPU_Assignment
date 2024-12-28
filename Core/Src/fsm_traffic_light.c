@@ -63,7 +63,6 @@ void scanning_led(void) {
 	scanning_idx = (scanning_idx + 1) % NO_OF_7SEG;
 }
 void update_led_traffic() {
-	LED_A_1_GPIO_Port->ODR |= ALL_LED;
 	switch (line_1) {
 	case RED:
 		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 1);
@@ -74,16 +73,16 @@ void update_led_traffic() {
 		}
 		break;
 	case GREEN:
-		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 1);
-		HAL_GPIO_WritePin(LED_B_1_GPIO_Port, LED_B_1_Pin, 0);
+		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 0);
+		HAL_GPIO_WritePin(LED_B_1_GPIO_Port, LED_B_1_Pin, 1);
 		if (count_1 <= 0) {
 			line_1 = AMBER;
 			count_1 = amber_light;
 		}
 		break;
 	case AMBER:
-		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 0);
-		HAL_GPIO_WritePin(LED_B_1_GPIO_Port, LED_B_1_Pin, 1);
+		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 1);
+		HAL_GPIO_WritePin(LED_B_1_GPIO_Port, LED_B_1_Pin, 0);
 		if (count_1 <= 0) {
 			line_1 = RED;
 			count_1 = red_light;
@@ -101,16 +100,16 @@ void update_led_traffic() {
 		}
 		break;
 	case GREEN:
-		HAL_GPIO_WritePin(LED_A_2_GPIO_Port, LED_A_2_Pin, 1);
-		HAL_GPIO_WritePin(LED_B_2_GPIO_Port, LED_B_2_Pin, 0);
+		HAL_GPIO_WritePin(LED_A_2_GPIO_Port, LED_A_2_Pin, 0);
+		HAL_GPIO_WritePin(LED_B_2_GPIO_Port, LED_B_2_Pin, 1);
 		if (count_2 <= 0) {
 			line_2 = AMBER;
 			count_2 = amber_light;
 		}
 		break;
 	case AMBER:
-		HAL_GPIO_WritePin(LED_A_2_GPIO_Port, LED_A_2_Pin, 0);
-		HAL_GPIO_WritePin(LED_B_2_GPIO_Port, LED_B_2_Pin, 1);
+		HAL_GPIO_WritePin(LED_A_2_GPIO_Port, LED_A_2_Pin, 1);
+		HAL_GPIO_WritePin(LED_B_2_GPIO_Port, LED_B_2_Pin, 0);
 		if (count_2 <= 0) {
 			line_2 = RED;
 			count_2 = red_light;
@@ -178,9 +177,7 @@ void fsm_for_traffic_light(void) {
 			fsm_for_auto();
 		break;
 	case MANUAL:
-		buffer++;
-		if (buffer % 2 == 1)
-			fsm_for_manual();
+		fsm_for_manual();
 		break;
 	case MODIFY:
 		fsm_for_modify();
