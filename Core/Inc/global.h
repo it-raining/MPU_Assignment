@@ -8,7 +8,7 @@
 #define INC_GLOBAL_H_
 #include "main.h"
 #define ONE_SEC 1000
-#define ALL_LED (LED_RED_1_Pin | LED_GREEN_1_Pin | LED_AMBER_1_Pin | LED_RED_2_Pin | LED_GREEN_2_Pin | LED_AMBER_2_Pin)
+#define ALL_LED (LED_A_1_Pin | LED_B_1_Pin | LED_A_2_Pin | LED_B_2_Pin)
 #define NO_OF_STATE 3
 #define NO_OF_MODE 4
 

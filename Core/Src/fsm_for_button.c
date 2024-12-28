@@ -14,7 +14,7 @@ void fsm_for_button(void) {
 	switch (button_state[MODIFY_BUTTON]) {
 	case BUTTON_RELEASED:
 		if (is_button_pressed(MODIFY_BUTTON)) {
-			LED_RED_1_GPIO_Port->ODR |= ALL_LED;
+			LED_A_1_GPIO_Port->ODR |= ALL_LED;
 			switch (mode) {
 			case AUTO:
 				mode = MANUAL;

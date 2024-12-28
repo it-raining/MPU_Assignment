@@ -80,16 +80,14 @@ void Error_Handler(void);
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
-#define BTN1_Pin GPIO_PIN_4
-#define BTN1_GPIO_Port GPIOA
-#define BTN2_Pin GPIO_PIN_5
-#define BTN2_GPIO_Port GPIOA
-#define BTN3_Pin GPIO_PIN_6
-#define BTN3_GPIO_Port GPIOA
+#define RED_LEDA5_Pin GPIO_PIN_5
+#define RED_LEDA5_GPIO_Port GPIOA
 #define SEG_4_Pin GPIO_PIN_4
 #define SEG_4_GPIO_Port GPIOC
 #define SEG_5_Pin GPIO_PIN_5
 #define SEG_5_GPIO_Port GPIOC
+#define LED_A_2_Pin GPIO_PIN_10
+#define LED_A_2_GPIO_Port GPIOB
 #define EN0_Pin GPIO_PIN_12
 #define EN0_GPIO_Port GPIOB
 #define EN1_Pin GPIO_PIN_13
@@ -100,24 +98,22 @@ void Error_Handler(void);
 #define EN3_GPIO_Port GPIOB
 #define SEG_6_Pin GPIO_PIN_6
 #define SEG_6_GPIO_Port GPIOC
-#define LED_RED_1_Pin GPIO_PIN_7
-#define LED_RED_1_GPIO_Port GPIOC
-#define LED_AMBER_1_Pin GPIO_PIN_8
-#define LED_AMBER_1_GPIO_Port GPIOC
-#define LED_GREEN_1_Pin GPIO_PIN_9
-#define LED_GREEN_1_GPIO_Port GPIOC
+#define BTN1_Pin GPIO_PIN_7
+#define BTN1_GPIO_Port GPIOC
+#define BTN3_Pin GPIO_PIN_8
+#define BTN3_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
-#define LED_RED_2_Pin GPIO_PIN_10
-#define LED_RED_2_GPIO_Port GPIOC
-#define LED_AMBER_2_Pin GPIO_PIN_11
-#define LED_AMBER_2_GPIO_Port GPIOC
-#define LED_GREEN_2_Pin GPIO_PIN_12
-#define LED_GREEN_2_GPIO_Port GPIOC
-#define SWO_Pin GPIO_PIN_3
-#define SWO_GPIO_Port GPIOB
+#define LED_B_1_Pin GPIO_PIN_3
+#define LED_B_1_GPIO_Port GPIOB
+#define LED_B_2_Pin GPIO_PIN_4
+#define LED_B_2_GPIO_Port GPIOB
+#define LED_A_1_Pin GPIO_PIN_5
+#define LED_A_1_GPIO_Port GPIOB
+#define BTN2_Pin GPIO_PIN_6
+#define BTN2_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
