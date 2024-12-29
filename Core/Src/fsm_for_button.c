@@ -90,6 +90,7 @@ void fsm_for_button(void) {
 		} else {
 			if (is_button_pressed_1s(STATE_BUTTON)) {
 				if (mode == MODIFY) {
+					HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, 1);
 					switch (line_1) {
 					case RED:
 						red_light = buffer;
@@ -110,6 +111,7 @@ void fsm_for_button(void) {
 		break;
 	case BUTTON_PRESSED_MORE_THAN_1_SECOND:
 		if (!is_button_pressed(STATE_BUTTON)) {
+			HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, 0);
 			button_state[STATE_BUTTON] = BUTTON_RELEASED;
 		}
 		break;
@@ -125,9 +127,9 @@ void fsm_for_button(void) {
 	case BUTTON_PRESSED:
 		if (!is_button_pressed(INC_BUTTON)) {
 			if (mode == MODIFY) {
+				buffer++;
 				if (line_1 == GREEN && buffer >= red_light)
 					buffer = 0;
-				buffer++;
 
 			}
 			button_state[INC_BUTTON] = BUTTON_RELEASED;

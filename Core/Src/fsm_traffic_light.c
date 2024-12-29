@@ -183,17 +183,17 @@ void fsm_for_modify() {
 		break;
 	case AMBER:
 		update_buffer(02, buffer);
-		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 0);
-		HAL_GPIO_WritePin(LED_B_1_GPIO_Port, LED_B_1_Pin, 1);
-		HAL_GPIO_WritePin(LED_A_2_GPIO_Port, LED_A_2_Pin, 0);
-		HAL_GPIO_WritePin(LED_B_2_GPIO_Port, LED_B_2_Pin, 1);
-		break;
-	case GREEN:
-		update_buffer(03, buffer);
 		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 1);
 		HAL_GPIO_WritePin(LED_B_1_GPIO_Port, LED_B_1_Pin, 0);
 		HAL_GPIO_WritePin(LED_A_2_GPIO_Port, LED_A_2_Pin, 1);
 		HAL_GPIO_WritePin(LED_B_2_GPIO_Port, LED_B_2_Pin, 0);
+		break;
+	case GREEN:
+		update_buffer(03, buffer);
+		HAL_GPIO_WritePin(LED_A_1_GPIO_Port, LED_A_1_Pin, 0);
+		HAL_GPIO_WritePin(LED_B_1_GPIO_Port, LED_B_1_Pin, 1);
+		HAL_GPIO_WritePin(LED_A_2_GPIO_Port, LED_A_2_Pin, 0);
+		HAL_GPIO_WritePin(LED_B_2_GPIO_Port, LED_B_2_Pin, 1);
 		break;
 	default:
 		break;
